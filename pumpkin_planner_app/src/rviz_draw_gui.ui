@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RVizDrawGUI</class>
+ <widget class="QWidget" name="RVizDrawGUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>233</width>
+    <height>169</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>RViz Draw Planner</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="clear_pose_arrays_push_button">
+     <property name="text">
+      <string>Clear Pose Arrays</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="save_poses_to_yaml_push_button">
+     <property name="text">
+      <string>Save Poses to YAML</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="load_pose_array_from_yaml_push_button">
+     <property name="text">
+      <string>Load PoseArray from YAML</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="send_planning_req_push_button">
+     <property name="text">
+      <string>Send Motion Planning Request</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="save_traj_to_yaml_push_button">
+     <property name="text">
+      <string>Save Trajectory to YAML</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

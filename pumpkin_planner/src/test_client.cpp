@@ -1,6 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <pumpkin_msgs/srv/plan_motion.hpp>
+// #include <planning_msgs/msg/pose_array_list.hpp>
 
 int main(int argc, char * argv[])
 {
@@ -15,9 +16,9 @@ int main(int argc, char * argv[])
 
   for (int i = 0; i < 20; ++i) {
     geometry_msgs::msg::Pose pose;
-    pose.position.x = 2.3395 ;//+ 0.02 * i;
-    pose.position.y = 0.0 + 0.02 * i;
-    pose.position.z = 2.027 + 0.003 * i;
+    pose.position.x = 1.5 ;//+ 0.02 * i;
+    pose.position.y = 0.2 + 0.02 * i;
+    pose.position.z = 0.5 + 0.003 * i;
     pose.orientation.x = 0.7071068;
     pose.orientation.y = 0.0;
     pose.orientation.z = 0.7071068;
@@ -33,9 +34,9 @@ int main(int argc, char * argv[])
 
   for (int i = 0; i < 30; ++i) {
     geometry_msgs::msg::Pose pose;
-    pose.position.x = 2.5395 - 0.02 * i;
+    pose.position.x = 1.3 - 0.02 * i;
     pose.position.y = 0.0 + 0.02 * i;
-    pose.position.z = 2.227 + 0.003 * i;
+    pose.position.z = 0.5 + 0.003 * i;
     pose.orientation.x = 0.7071068;
     pose.orientation.y = 0.0;
     pose.orientation.z = 0.7071068;
@@ -48,7 +49,7 @@ int main(int argc, char * argv[])
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr pose_pub
     = node->create_publisher<geometry_msgs::msg::PoseArray>("/test_poses", 10);
   auto pose_to_pub = pose_array;
-  pose_to_pub.poses.insert(pose_to_pub.poses.end(), pose_array2.poses.begin(), pose_array2.poses.end());
+  // pose_to_pub.poses.insert(pose_to_pub.poses.end(), pose_array2.poses.begin(), pose_array2.poses.end());
   pose_pub->publish(pose_to_pub);
   RCLCPP_INFO(node->get_logger(), "Published test PoseArray with %zu poses", pose_to_pub.poses.size());
 
@@ -62,7 +63,7 @@ int main(int argc, char * argv[])
   auto request = std::make_shared<pumpkin_msgs::srv::PlanMotion::Request>();
   // pose_array.poses.insert(pose_array.poses.end(), pose_array2.poses.begin(), pose_array2.poses.end());
   request->path.push_back(pose_array);
-  request->path.push_back(pose_array2);
+  // request->path.push_back(pose_array2);
 
   auto future = client->async_send_request(request);
 
