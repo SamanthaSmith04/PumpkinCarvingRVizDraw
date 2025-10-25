@@ -1,6 +1,10 @@
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <pumpkin_msgs/srv/plan_motion.hpp>
+#include "yaml_utils.hpp"
+#include <fstream>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <yaml-cpp/yaml.h>
 // #include <planning_msgs/msg/pose_array_list.hpp>
 
 int main(int argc, char * argv[])
@@ -77,6 +81,16 @@ int main(int argc, char * argv[])
       node->create_publisher<trajectory_msgs::msg::JointTrajectory>("/trajectory", 10);
 
     traj_pub->publish(response->trajectory);
+
+    // write yaml to a file
+    std::string yaml_filename = "motion_plan_response.yaml";
+    YAML::Node yaml_node;
+    yaml_node = YAML::convert<trajectory_msgs::msg::JointTrajectory>::encode(response->trajectory);
+    std::ofstream fout(yaml_filename);
+    fout << yaml_node;
+    fout.close();
+    RCLCPP_INFO(node->get_logger(), "Wrote motion plan response to %s", yaml_filename.c_str());
+
     RCLCPP_INFO(node->get_logger(), "Published trajectory with %zu points", response->trajectory.points.size());
 
   } else {

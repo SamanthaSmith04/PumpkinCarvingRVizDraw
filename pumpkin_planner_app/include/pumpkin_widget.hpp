@@ -5,7 +5,7 @@
 #include <vector>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include "QWidget"
-#include "rviz_selection_3d/msg/selection_region.hpp"
+// #include "rviz_selection_3d/msg/selection_region.hpp"
 
 
 
@@ -29,7 +29,7 @@ class RVizDrawGUI : public QWidget
     rclcpp::Node::SharedPtr ros_node_;
     Ui::RVizDrawGUI* ui_;
     std::vector<geometry_msgs::msg::PoseArray> saved_poses_arrays_;
-    rclcpp::Subscription
+    // rclcpp::Subscription
 };
 
 } // namespace pumpkin_widget
