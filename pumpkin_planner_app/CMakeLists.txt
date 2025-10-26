@@ -4,15 +4,14 @@ project(pumpkin_planner_app LANGUAGES CXX)
 # Find packages
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
-find_package(behaviortree_cpp REQUIRED)
-find_package(behaviortree_ros2 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(rclcpp REQUIRED)
 find_package(rviz_common REQUIRED)
 find_package(pluginlib REQUIRED)
-find_package(bt_common_nodes REQUIRED)
 find_package(motoros2_interfaces REQUIRED)
 find_package(rviz_selection_3d)
+find_package(visualization_msgs REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 find_package(MPI REQUIRED)
 if(NOT TARGET MPI::MPI_C)
@@ -42,12 +41,11 @@ set(SRCS ${UI_HEADERS}
 # Common dependencies for all targets
 set(COMMON_DEPS
     ament_index_cpp
-    behaviortree_cpp
-    behaviortree_ros2
     rclcpp
-    bt_common_nodes
     motoros2_interfaces
-    
+    yaml-cpp
+    rviz_selection_3d
+    visualization_msgs
 )
 
 # Shared library
@@ -73,6 +71,7 @@ ament_target_dependencies(pumpkin_qt_gui_lib ${COMMON_DEPS})
 
 target_link_libraries(pumpkin_qt_gui_lib
     Qt5::Widgets
+    yaml-cpp
 )
 
 # Main executable

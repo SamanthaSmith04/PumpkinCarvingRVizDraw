@@ -12,11 +12,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>behaviortree_cpp</depend>
-  <depend>behaviortree_ros2</depend>
   <depend>rclcpp</depend>
-  <depend>bt_common_nodes</depend>
   <depend>motoros2_interfaces</depend>
+  <depend>rviz_selection_3d</depend>
   
   <export>
     <build_type>ament_cmake</build_type>

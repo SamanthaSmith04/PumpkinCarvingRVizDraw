@@ -176,6 +176,16 @@ void SelectionToolPlugin::publishSelectedAreaInfo(Ogre::Camera* camera) {
         selected_points_msg.push_back(point_msg);
     }
 
+    std::vector<geometry_msgs::msg::Point> selected_points_3d_msg;
+    for (auto& point: selected_points) {
+        geometry_msgs::msg::Point point_msg;
+        point_msg.x = point.x;
+        point_msg.y = point.y;
+        point_msg.z = point.z;
+        selected_points_3d_msg.push_back(point_msg);
+    }
+    msg.points_3d = selected_points_3d_msg;
+
     msg.points = selected_points_msg;
 
     msg.is_selecting = selection_mode;
