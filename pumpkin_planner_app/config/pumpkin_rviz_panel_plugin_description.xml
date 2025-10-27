@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<library path="pumpkin_gui_panel">
-    <class name="pumpkin_widget/PumpkinPanel"
-           type="pumpkin_widget::PumpkinPanel" 
+<library path="rviz_draw_gui_panel">
+    <class name="pumpkin_widget/RVizDrawPumpkinPanel"
+           type="pumpkin_widget::RVizDrawPumpkinPanel" 
            base_class_type="rviz_common::Panel">
         <description>
             GUI for use in RViz to visualize and run robot processes for Pumpkin Carving

@@ -49,17 +49,17 @@ set(COMMON_DEPS
 )
 
 # Shared library
-add_library(pumpkin_qt_gui_lib SHARED ${SRCS} ${UIS})
+add_library(rviz_draw_qt_gui_lib SHARED ${SRCS} ${UIS})
 
 # Define HAS_MOTOMAN_SUPPORT if motoros2_interfaces was found
 if(motoros2_interfaces_FOUND)
-    target_compile_definitions(pumpkin_qt_gui_lib PUBLIC HAS_MOTOMAN_SUPPORT)
+    target_compile_definitions(rviz_draw_qt_gui_lib PUBLIC HAS_MOTOMAN_SUPPORT)
     message(STATUS "Motoman support enabled")
 else()
     message(STATUS "Motoman support disabled - motoros2_interfaces not found")
 endif()
 
-target_include_directories(pumpkin_qt_gui_lib PUBLIC
+target_include_directories(rviz_draw_qt_gui_lib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -67,32 +67,32 @@ target_include_directories(pumpkin_qt_gui_lib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
-ament_target_dependencies(pumpkin_qt_gui_lib ${COMMON_DEPS})
+ament_target_dependencies(rviz_draw_qt_gui_lib ${COMMON_DEPS})
 
-target_link_libraries(pumpkin_qt_gui_lib
+target_link_libraries(rviz_draw_qt_gui_lib
     Qt5::Widgets
     yaml-cpp
 )
 
 # Main executable
-add_executable(pumpkin_qt_gui src/main.cpp)
-target_link_libraries(pumpkin_qt_gui pumpkin_qt_gui_lib)
+add_executable(rviz_draw_qt_gui src/main.cpp)
+target_link_libraries(rviz_draw_qt_gui rviz_draw_qt_gui_lib)
 
 # RViz plugin
-add_library(pumpkin_gui_panel SHARED src/pumpkin_rviz_panel.cpp)
+add_library(rviz_draw_gui_panel SHARED src/pumpkin_rviz_panel.cpp)
 
-target_include_directories(pumpkin_gui_panel PUBLIC
+target_include_directories(rviz_draw_gui_panel PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(pumpkin_gui_panel 
-    pumpkin_qt_gui_lib
+target_link_libraries(rviz_draw_gui_panel 
+    rviz_draw_qt_gui_lib
     rviz_common::rviz_common
     pluginlib::pluginlib
 )
 
-ament_target_dependencies(pumpkin_gui_panel
+ament_target_dependencies(rviz_draw_gui_panel
     ${COMMON_DEPS}
     rviz_common
     pluginlib
@@ -100,9 +100,9 @@ ament_target_dependencies(pumpkin_gui_panel
 
 # Installation
 install(TARGETS 
-    pumpkin_qt_gui
-    pumpkin_qt_gui_lib
-    pumpkin_gui_panel
+    rviz_draw_qt_gui
+    rviz_draw_qt_gui_lib
+    rviz_draw_gui_panel
     EXPORT ${PROJECT_NAME}_targets
     RUNTIME DESTINATION lib/${PROJECT_NAME}
     LIBRARY DESTINATION lib

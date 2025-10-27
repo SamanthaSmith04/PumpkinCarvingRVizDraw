@@ -20,7 +20,7 @@
 
 namespace pumpkin_widget
 {
-class PumpkinPanel : public rviz_common::Panel
+class RVizDrawPumpkinPanel : public rviz_common::Panel
 {
     public:
         void onInitialize() override {
@@ -43,4 +43,4 @@ class PumpkinPanel : public rviz_common::Panel
         RVizDrawGUI* widget;
 };
 }
-PLUGINLIB_EXPORT_CLASS(pumpkin_widget::PumpkinPanel, rviz_common::Panel)
+PLUGINLIB_EXPORT_CLASS(pumpkin_widget::RVizDrawPumpkinPanel, rviz_common::Panel)
