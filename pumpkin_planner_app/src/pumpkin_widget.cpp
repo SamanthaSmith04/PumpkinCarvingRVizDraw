@@ -15,7 +15,7 @@
 namespace pumpkin_widget
 {
 
-static const double pumpkin_radius = 0.5; // example radius
+static const double pumpkin_radius = 0.1143; // example radius
 
 RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
     : QWidget(parent), ros_node_(ros_node), ui_(new Ui::RVizDrawGUI)
@@ -108,9 +108,9 @@ RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
         // get the rotation based on the normal of the pumpkin marker
         // compute normal from pumpkin center to the selected point
         geometry_msgs::msg::Point center = pumpkin_marker_.pose.position;
-        double vx = point.x - center.x;
-        double vy = point.y - center.y;
-        double vz = point.z - center.z;
+        double vx = center.x - point.x;
+        double vy = center.y - point.y;
+        double vz = center.z - point.z;
         double norm = std::sqrt(vx*vx + vy*vy + vz*vz);
 
         // default normal = +Z if point coincides with center
@@ -170,7 +170,7 @@ RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
   pumpkin_marker_.action = visualization_msgs::msg::Marker::ADD;
   pumpkin_marker_.pose.position.x = 0.0;
   pumpkin_marker_.pose.position.y = 0.0;
-  pumpkin_marker_.pose.position.z = -pumpkin_radius;
+  pumpkin_marker_.pose.position.z = pumpkin_radius;
   pumpkin_marker_.scale.x = pumpkin_radius * 2.0;
   pumpkin_marker_.scale.y = pumpkin_radius * 2.0;
   pumpkin_marker_.scale.z = pumpkin_radius * 2.0;
