@@ -8,6 +8,9 @@
 #include "yaml_utils.h"
 #include <iostream>
 #include <fstream>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
 
 namespace pumpkin_widget
 {
@@ -24,15 +27,12 @@ RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
   connect(ui_->save_poses_to_yaml_push_button, &QAbstractButton::clicked, this, [this]() {
     // Save Poses to YAML file
     int count = 0;
-    for (const auto& poses_array : saved_poses_arrays_) {
-      YAML::Node node = YAML::convert<geometry_msgs::msg::PoseArray>::encode(poses_array);
-      // build filename safely: convert count to string and start with a std::string
-      std::string filename = std::string("poses_array_") + std::to_string(count) + ".yaml";
-      std::ofstream fout(filename, std::ios::app);
-      fout << node;
-      fout.close();
-      count++;
-    }
+    YAML::Node node = YAML::convert<std::vector<geometry_msgs::msg::PoseArray>>::encode(saved_poses_arrays_);
+    // build filename safely: convert count to string and start with a std::string
+    std::string filename = std::string("poses_array_") + ".yaml";
+    std::ofstream fout(filename, std::ios::trunc);
+    fout << node;
+    fout.close();
   });
 
   connect(ui_->clear_pose_arrays_push_button, &QAbstractButton::clicked, this, [this]() {
@@ -71,10 +71,36 @@ RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
     "/select_3d_tool/region_points", 10,
     [this](const rviz_selection_3d::msg::SelectionRegion::SharedPtr msg) {
       RCLCPP_INFO(ros_node_->get_logger(), "Received selection region with %zu points", msg->points.size());
+
+      // convert the points to the pumpkin face frame from world using tf2
+      auto clock = std::make_shared<rclcpp::Clock>(RCL_ROS_TIME);
+      tf2_ros::Buffer tf_buffer(clock);
+      tf2_ros::TransformListener tf_listener(tf_buffer, ros_node_);
+
+      std::string target_frame = "pumpkin_face";
+      std::string source_frame = "world";
+
+      for (auto& point : msg->points_3d)
+      {
+          geometry_msgs::msg::PointStamped p_in, p_out;
+          p_in.header.frame_id = source_frame;
+          p_in.header.stamp = ros_node_->get_clock()->now();  // use current ROS time
+          p_in.point = point;
+
+          try
+          {
+              tf_buffer.transform(p_in, p_out, target_frame, tf2::durationFromSec(0.1));
+              point = p_out.point;  // overwrite the original point
+          }
+          catch (tf2::TransformException &ex)
+          {
+            std::cerr << "Transform error: " << ex.what() << std::endl;
+          }
+      }
       // Process the received selection region message
 
       geometry_msgs::msg::PoseArray poses_array;
-      poses_array.header.frame_id = "world";
+      poses_array.header.frame_id = "pumpkin_face";
       for (const auto& point : msg->points_3d) {
         // RCLCPP_INFO(ros_node_->get_logger(), "Point: x=%f, y=%f, z=%f", point.x, point.y, point.z);
         geometry_msgs::msg::Pose pose;
@@ -136,7 +162,7 @@ RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
   // set up publisher for pumpkin markers
   pumpkin_marker_pub_ = ros_node_->create_publisher<visualization_msgs::msg::Marker>("pumpkin_marker", 10);
   pumpkin_marker_ = visualization_msgs::msg::Marker();
-  pumpkin_marker_.header.frame_id = "world";
+  pumpkin_marker_.header.frame_id = "pumpkin_face";
   pumpkin_marker_.header.stamp = ros_node_->now();
   pumpkin_marker_.ns = "pumpkin";
   pumpkin_marker_.id = 0;
@@ -144,7 +170,7 @@ RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
   pumpkin_marker_.action = visualization_msgs::msg::Marker::ADD;
   pumpkin_marker_.pose.position.x = 0.0;
   pumpkin_marker_.pose.position.y = 0.0;
-  pumpkin_marker_.pose.position.z = 0.0;
+  pumpkin_marker_.pose.position.z = -pumpkin_radius;
   pumpkin_marker_.scale.x = pumpkin_radius * 2.0;
   pumpkin_marker_.scale.y = pumpkin_radius * 2.0;
   pumpkin_marker_.scale.z = pumpkin_radius * 2.0;
@@ -160,7 +186,7 @@ RVizDrawGUI::RVizDrawGUI(rclcpp::Node::SharedPtr ros_node, QWidget *parent)
 
       pumpkin_marker_pub_->publish(pumpkin_marker_);
       geometry_msgs::msg::PoseArray all_poses;
-      all_poses.header.frame_id = "world";
+      all_poses.header.frame_id = "pumpkin_face";
       all_poses.header.stamp = ros_node_->now();
       for (const auto& poses_array : saved_poses_arrays_) {
         all_poses.poses.insert(all_poses.poses.end(), poses_array.poses.begin(), poses_array.poses.end());

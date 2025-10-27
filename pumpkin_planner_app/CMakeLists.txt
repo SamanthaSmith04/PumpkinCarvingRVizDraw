@@ -12,6 +12,9 @@ find_package(motoros2_interfaces REQUIRED)
 find_package(rviz_selection_3d)
 find_package(visualization_msgs REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 find_package(MPI REQUIRED)
 if(NOT TARGET MPI::MPI_C)
@@ -46,6 +49,9 @@ set(COMMON_DEPS
     yaml-cpp
     rviz_selection_3d
     visualization_msgs
+    tf2
+    tf2_ros
+    tf2_geometry_msgs
 )
 
 # Shared library
