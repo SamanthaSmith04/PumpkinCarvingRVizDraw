@@ -11,3 +11,14 @@ These pose arrays can be exported as a YAML file, which was loaded into a differ
 
 https://github.com/user-attachments/assets/a7806739-ed16-499e-a7a7-a64d404b7a38
 
+# Building + Running
+```
+colcon build
+
+source install/setup.bash
+
+rviz2
+```
+
+Load in the rviz config file and publish a static tf from `world` to `pumpkin_face`
+`ros2 run tf2_ros static_transform_publisher x y z x y z w world pumpkin_face`
