@@ -21,4 +21,5 @@ rviz2
 ```
 
 Load in the rviz config file and publish a static tf from `world` to `pumpkin_face`
+
 `ros2 run tf2_ros static_transform_publisher x y z x y z w world pumpkin_face`
